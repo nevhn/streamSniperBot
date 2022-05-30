@@ -11,9 +11,9 @@ export const help: CommandInt = {
     try {
       await interaction.deferReply()
       const helpEmbed = new MessageEmbed()
-      helpEmbed.setTitle('100 Days of Code Bot!')
+      helpEmbed.setTitle('FckingStreamSnipers')
       helpEmbed.setDescription(
-        'This discord bot is designed to help you track and share your 100 Days of Code progress.',
+        'This discord bot is designed to check if current streamer in queueing up for a game',
       )
       helpEmbed.addField(
         "Create today's update",
