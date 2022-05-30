@@ -20,6 +20,7 @@
     "dotenv": "^16.0.1",
     "fs-extra": "^10.1.0",
     "node-tesseract-ocr": "^2.2.1",
+    "node-twitch": "^0.4.5",
     "puppeteer": "^14.1.1",
     "winston": "^3.7.2"
   },
