@@ -2,14 +2,7 @@ import puppeteer from 'puppeteer'
 import fs from 'fs-extra'
 
 export const captureStreamScreenshot = async (url: string): Promise<boolean | undefined> => {
-  // const site = 'https://www.twitch.tv/videos/1309886508?t=01h39m51s' // insert twitch stream by name
-  // const streamer = 'tsm_imperialhal'
   const dir = './dist/scripts/screenshot'
-  // https://www.twitch.tv/tsm_imperialhal
-  /**TODO:
-   * grab playername from url -> splice()
-   */
-
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -31,10 +24,8 @@ export const captureStreamScreenshot = async (url: string): Promise<boolean | un
     process.kill(browserPID as number)
     console.log('Screenshot taken. ✔ ')
     return true
-    // return img
   } catch (err) {
     console.error(err)
     return undefined
-    // return undefined
   }
 }
