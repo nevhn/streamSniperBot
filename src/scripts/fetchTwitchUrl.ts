@@ -1,9 +1,7 @@
 import TwitchApi from 'node-twitch'
 import 'dotenv/config'
 
-export const fetchTwitchUrl = async (
-  streamer: string = 'xqc',
-): Promise<string | boolean | undefined> => {
+export const fetchTwitchUrl = async (streamer: string): Promise<string | boolean | null> => {
   const twitch = new TwitchApi({
     client_id: process.env.TWITCH_CLIENT_ID as string,
     client_secret: process.env.TWITCH_CLIENT_SECRET as string,
@@ -20,5 +18,5 @@ export const fetchTwitchUrl = async (
     }
     return false
   }
-  return undefined
+  return null
 }

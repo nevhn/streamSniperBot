@@ -15,8 +15,11 @@ export const snipe: CommandInt = {
     ) as SlashCommandBuilder,
   run: async (interaction: any) => {
     try {
-      const streamer = interaction.option.getString('input')
       await interaction.deferReply()
+      const streamer: string = interaction.options.getString('input')
+      console.log(streamer)
+
+      // console.log(streamer)
       const twitchUrl = await fetchTwitchUrl(streamer)
       if (twitchUrl === undefined) {
         await interaction.reply(`${streamer} does not exist`)
@@ -38,7 +41,6 @@ export const snipe: CommandInt = {
       } else {
         await interaction.reply('In game or something..')
       }
-      await interaction.editReply({})
     } catch (err) {
       errorHandler('snipe command', err)
     }
