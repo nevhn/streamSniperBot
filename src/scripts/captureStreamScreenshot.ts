@@ -3,10 +3,16 @@ import fs from 'fs-extra'
 
 export const captureStreamScreenshot = async (url: string): Promise<boolean | undefined> => {
   const dir = './dist/scripts/screenshot'
+  const xPath =
+    process.platform === 'darwin'
+      ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      : '/usr/bin/google-chrome-stable'
   try {
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath: '/usr/bin/google-chrome-stable',
+      executablePath: xPath,
+      // executablePath: '/usr/bin/google-chrome-stable' -> linux,
+      // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' -> macos,
     })
     // console.log(`navigating to ${player}'s stream 🏃‍♂️ `)
     const page = await browser.newPage()

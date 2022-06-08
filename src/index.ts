@@ -9,10 +9,10 @@ import 'dotenv/config'
 // import { scanImage } from './scripts/scanImage'
 ;(async () => {
   const BOT = new Client({ intents: IntentOptions })
-  // const url = ''
   BOT.on('ready', async () => await onReady(BOT))
   BOT.on('interactionCreate', async (interaction) => await onInteraction(interaction))
   // BOT.on('onScreenshot', async (snipe) => await onScreenshot(BOT, snipe))
+  BOT.on('test', async () => console.log('heloo'))
 
   // const streamSnipe = async () => {
   //   try {
