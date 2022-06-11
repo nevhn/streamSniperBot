@@ -2,7 +2,7 @@ import { errorHandler } from '../utils/errorHandler'
 import TwitchApi from 'node-twitch'
 import 'dotenv/config'
 
-export const fetchTwitchUrl = async (streamer: string): Promise<string | boolean | null | void> => {
+export const fetchTwitchUrl = async (streamer: string): Promise<string | boolean | void> => {
   try {
     const twitch = new TwitchApi({
       client_id: process.env.TWITCH_CLIENT_ID as string,
@@ -19,10 +19,11 @@ export const fetchTwitchUrl = async (streamer: string): Promise<string | boolean
       if (streamIsLive) {
         return `https://www.twitch.tv/${streamer}`
       }
+      console.log('streamer is offline')
       return false
     }
-    return null
+    return undefined
   } catch (err) {
-    return errorHandler('fetchTwitchUrl', err)
+    errorHandler('fetchTwitchUrl', err)
   }
 }
