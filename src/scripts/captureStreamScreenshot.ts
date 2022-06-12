@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 import fs from 'fs-extra'
-import useProxy from 'jerry-puppeteer-page-proxy'
+// import useProxy from 'jerry-puppeteer-page-proxy'
 // import randomUserAgent from 'random-useragent'
 export const captureStreamScreenshot = async (url: string): Promise<boolean> => {
   const dir = './dist/scripts/screenshot'
@@ -24,7 +24,8 @@ export const captureStreamScreenshot = async (url: string): Promise<boolean> => 
     })
     // console.log(`navigating to ${player}'s stream 🏃‍♂️ `)
     const page = await browser.newPage()
-    await useProxy(page, 'http://164.155.150.0:80')
+    // console.log(url)
+    // await useProxy(page, 'http://103.152.112.185:80')
     const browserPID = browser.process()?.pid
     // const userAgent = await randomUserAgent.getRandom()
     // await page.setUserAgent(userAgent)
@@ -35,7 +36,7 @@ export const captureStreamScreenshot = async (url: string): Promise<boolean> => 
     )
     element?.click()
     console.log(`Taking screenshot... 📷  `)
-    await page.waitForTimeout(4750)
+    await page.waitForTimeout(4600)
     fs.ensureDirSync(dir) // create directory if it doesn't exist
     await page.screenshot({ path: './dist/scripts/screenshot/twitch.png' })
     process.kill(browserPID as number)
