@@ -35,12 +35,12 @@ export const captureStreamScreenshot = async (url: string): Promise<boolean> => 
       `/html/body/div[1]/div/div[2]/div[1]/div[2]/div/div[2]/div/button`,
     )
     element?.click()
-    console.log(`Taking screenshot... 📷  `)
+    // console.log(`Taking screenshot... 📷  `)
     await page.waitForTimeout(4600)
     fs.ensureDirSync(dir) // create directory if it doesn't exist
     await page.screenshot({ path: './dist/scripts/screenshot/twitch.png' })
     process.kill(browserPID as number)
-    console.log('Screenshot taken. ✔ ')
+    // console.log('Screenshot taken. ✔ ')
     return true
   } catch (err) {
     throw err

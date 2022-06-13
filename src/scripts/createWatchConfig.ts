@@ -1,24 +1,23 @@
 import fs from 'fs-extra'
 // import Path from 'path'
 
-// const path = Path.join(__dirname, 'watch.json')
-// const path = '../config/watch.json'
+// const path = Path.dirname('../../config/watch.json')
+// // const path = '../config/watch.json'
 // console.log(path)
 export const watchConfig = async () => {
-  //   type Watch = {
-  //     streamer: string
-  //     flag: boolean
-  //   }
+  type Watch = {
+    streamer: string
+    flag: boolean
+  }
 
-  //   const watch: Watch = {
-  //     streamer: '',
-  //     flag: true,
-  //   }
+  const watch: Watch = {
+    streamer: '',
+    flag: false,
+  }
 
   try {
-    await fs.ensureFile('./config/watch.json')
-    console.log('success!')
-    // await fs.writeJSON('../config/watch.json', watch)
+    await fs.writeJSON('./dist/config/watch.json', watch)
+    console.log('generated watch config')
   } catch (err) {
     console.error(err)
   }
