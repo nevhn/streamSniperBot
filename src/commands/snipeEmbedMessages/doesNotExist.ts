@@ -9,4 +9,5 @@ export const doesNotExistEmbed = {
     url: warning,
   },
   timestamp: new Date(),
+  online: false,
 }

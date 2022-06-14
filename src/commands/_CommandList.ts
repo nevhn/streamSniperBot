@@ -1,5 +1,5 @@
 import { CommandInt } from '../interfaces/CommandInt'
 import { help } from './help'
 import { snipe } from './snipe'
-
-export const CommandList: CommandInt[] = [help, snipe]
+import { stop } from './stop'
+export const CommandList: CommandInt[] = [help, snipe, stop]

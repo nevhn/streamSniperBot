@@ -10,4 +10,5 @@ export const offlineEmbed = {
     url: sleepingFace,
   },
   timestamp: new Date(),
+  online: false,
 }

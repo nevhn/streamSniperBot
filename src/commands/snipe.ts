@@ -1,11 +1,10 @@
 import { CommandInt } from '../interfaces/CommandInt'
 import { errorHandler } from '../utils/errorHandler'
-import fs from 'fs-extra'
 import { SlashCommandBuilder } from '@discordjs/builders'
-// import { logHandler } from '../utils/logHandler'
+import { logHandler } from '../utils/logHandler'
 import { generateSnipeReply } from '../scripts/generateSnipeReply'
-// import Path from 'path'
-import watch from '../config/watch.json'
+import { watchConfig } from '../scripts/generateWatch'
+import fs from 'fs-extra'
 
 export const snipe: CommandInt = {
   data: new SlashCommandBuilder()
@@ -19,46 +18,39 @@ export const snipe: CommandInt = {
     ) as SlashCommandBuilder,
   run: async (interaction: any) => {
     try {
+      /**TODO:
+       * refactor this
+       */
       await interaction.deferReply()
 
+      logHandler.log('info', 'snipe command was used')
       const watchOption = interaction.options.getBoolean('watch')
       const streamer = interaction.options.getString('streamer')
-
-      // await interaction.editReply('....')
-
-      if (watchOption || watch.flag) {
-        console.log('watch flag: ', watch.flag)
-        if (watchOption) {
-          const watch = {
-            streamer,
-            flag: true,
-          }
-
-          try {
-            await fs.writeJSON('./dist/config/watch.json', watch)
-            console.log('modified watch config')
-          } catch (err) {
-            console.log(err)
-          }
-        }
-
-       const interval =  setInterval(async () => {
-          console.log(`watching https://twitch.tv/${streamer}`)
-          const message = await generateSnipeReply(streamer)
-          /**TODO:
-           * figure out a condition to run clearInterval
-           */
-          // if (message.description != '') clearInterval(interval)
-
-            await interaction.editReply({ embeds: [message] })
-          }
-        }, 8000)
-        return
-      }
-
-      console.log('outside of loop', watchOption)
       const message = await generateSnipeReply(streamer)
-      await interaction.editReply({ embeds: [message] })
+      await interaction.followUp({ embeds: [message] })
+
+      if (!message?.online) return // exit if streamer <is offline | does not exist>
+
+      if (watchOption) {
+        await watchConfig(streamer, true)
+        while (true) {
+          logHandler.log(`info`, `watching ${streamer}`)
+          const isWatchFlag = await fs.readJson('./dist/config/watch.json') // reads the recently modified watch.json
+          if (!isWatchFlag.flag) {
+            logHandler.log('info', `${streamer} watch flag set to ${false}`)
+            break
+          }
+          const newMessage = await generateSnipeReply(streamer)
+          if (!newMessage?.online) {
+            // if streamer suddenly goes offline
+            logHandler.log(`info`, `${streamer} went offline`)
+            await interaction.followUp({ embeds: [newMessage] })
+            break
+          }
+          await interaction.followUp({ embeds: [newMessage] })
+        }
+      }
+      return
     } catch (err) {
       errorHandler('snipe command', err)
       await interaction.editReply('Something went wrong')

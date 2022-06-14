@@ -18,4 +18,5 @@ export const inLobbyEmbed = {
     url: '',
   },
   timestamp: new Date(),
+  online: true,
 }
