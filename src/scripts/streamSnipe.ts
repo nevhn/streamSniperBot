@@ -5,26 +5,36 @@ import { scanImage } from '../scripts/scanImage'
 import Path from 'path'
 
 interface Snipe {
-  url: string | boolean | void | null
-  imgurUrl?: string
+  // imgurUrl?: string
+  streamUrl?: string
+  online?: boolean | undefined
   inQueue?: boolean | undefined
 }
-const path = Path.join(__dirname, '/screenshot/twitch.png')
-export const streamSnipe = async (streamer: string): Promise<Snipe | undefined> => {
+const path = Path.join(__dirname, '/screenshot/twitch.png') // change to twitch.png
+export const streamSnipe = async (streamer: string): Promise<Snipe> => {
   try {
-    const url = await fetchTwitchUrl(streamer)
-    if (!url) return { url }
-    await captureStreamScreenshot(url as string)
-    // const imgurUrl = await uploadScreenshot(path)
-    const imgurUrl = 'https://i.imgur.com/3nVVg3o.gif'
+    /**
+     * TODO:
+     * implement imgur api for debugging purposes (access screenshots from server)
+     */
+    // const {streamUrl, online} = await fetchTwitchUrl(streamer)
+    const { streamUrl, online, mature } = await fetchTwitchUrl(streamer)
+    // console.log(twitchResponse)
+    if (!streamUrl) return { online }
+    await captureStreamScreenshot(streamUrl, mature)
+    // const imgurUrl = await uploadScreenshot(img as Buffer)
+    // const imgurUrl = 'https://i.imgur.com/3nVVg3o.gif'
     const inQueue = await scanImage(path)
     return {
-      url,
-      imgurUrl,
+      streamUrl,
+      online,
       inQueue,
+      // url,
+      // imgurUrl,
+      // inQueue,
     }
   } catch (err) {
     console.error(err)
-    throw new Error('streamSnipe hit a snag')
+    return {}
   }
 }

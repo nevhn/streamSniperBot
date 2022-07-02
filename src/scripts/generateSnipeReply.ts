@@ -3,32 +3,29 @@ import { inLobbyEmbed } from '../commands/snipeEmbedMessages/inLobby'
 import { notInLobbyEmbed } from '../commands/snipeEmbedMessages/notInLobby'
 import { offlineEmbed } from '../commands/snipeEmbedMessages/offline'
 import { streamSnipe } from './streamSnipe'
-
 export const generateSnipeReply = async (streamer: string) => {
   const snipe = await streamSnipe(streamer)
-  console.log({ streamer: snipe })
+  console.log(snipe)
   /**TODO:
-   * send attachments instead of imgur links
-   * see ->  https://stackoverflow.com/questions/51199950/how-do-i-use-a-local-image-on-a-discord-js-rich-embed
+   * merge embeds (less is more)
+   * show watch status
    */
-  if (snipe?.url === null) {
+  if (snipe?.online === undefined) {
     doesNotExistEmbed.title = streamer
     return doesNotExistEmbed
   }
-  if (snipe?.url === false) {
+  if (snipe?.online === false) {
     offlineEmbed.title = streamer
     return offlineEmbed
   }
 
   if (snipe?.inQueue) {
     inLobbyEmbed.title = streamer
-    inLobbyEmbed.url = snipe.url as string
-    inLobbyEmbed.image.url = snipe.imgurUrl as string
+    inLobbyEmbed.url = snipe.streamUrl as string
     return inLobbyEmbed
   }
 
   notInLobbyEmbed.title = streamer
-  notInLobbyEmbed.url = snipe?.url as string
-  notInLobbyEmbed.image.url = snipe?.imgurUrl as string
+  notInLobbyEmbed.url = snipe?.streamUrl as string
   return notInLobbyEmbed
 }

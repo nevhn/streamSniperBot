@@ -1,0 +1,16 @@
+{
+  "emoji": {
+    "warning": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/warning_26a0-fe0f.png",
+    "checkMarkButton": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/check-mark-button_2705.png",
+    "bullseye": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/direct-hit_1f3af.png",
+    "sleepingFace": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/sleeping-face_1f634.png",
+    "crossMark": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/325/cross-mark_274c.png"
+  },
+
+  "color": {
+    "red": "0x00ff0000",
+    "yellow": "0x00daff00",
+    "green": "0x005aff00",
+    "darkGrey": "0x00A9A9A9"
+  }
+}
