@@ -1,10 +1,6 @@
 import fs from 'fs-extra'
 import puppeteer from 'puppeteer'
-/**
- * TODO:
- * [x] Click 'start watching' on mature streams
- *      - [x] write logic code for non-mature streams
- */
+import { logHandler } from '../utils/logHandler'
 export const captureStreamScreenshot = async (
   url: string,
   mature?: boolean,
@@ -25,7 +21,6 @@ export const captureStreamScreenshot = async (
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: exPath,
-
       //       args: [
       //         '--disable-web-security',
       //         '--disable-features=IsolateOrigins,site-per-process',
@@ -38,10 +33,9 @@ export const captureStreamScreenshot = async (
       //         '--user-agent=hhh',
       //       ],
     })
-    console.log(`navigating to stream 🏃‍♂️`)
     const page = (await browser.pages())[0]
-    await page.setUserAgent(userAgent)
     // const page = await browser.newPage()
+    await page.setUserAgent(userAgent)
     const browserPID = browser.process()?.pid
     await page.setViewport({ width: 1980, height: 1080, deviceScaleFactor: 2.5 })
     await page.goto(url)
@@ -61,18 +55,13 @@ export const captureStreamScreenshot = async (
       )
       await startWatchingBtn?.click()
     }
-    // const fullscreenButton = await page.waitForXPath(
-    //   // '#root > div > div.Layout-sc-nxg1ff-0.bSuLAT > div.Layout-sc-nxg1ff-0.hVqkZv > main > div.root-scrollable.scrollable-area.scrollable-area--suppress-scroll-x > div.simplebar-scroll-content > div > div > div.InjectLayout-sc-588ddc-0.persistent-player > div > div.Layout-sc-nxg1ff-0.video-player > div > div.Layout-sc-nxg1ff-0.video-ref > div > div > div:nth-child(6) > div > div.Layout-sc-nxg1ff-0.jzsWfm > div.Layout-sc-nxg1ff-0.dIyPHK.player-controls__right-control-group > div:nth-child(5) > button',
-    //   '/html/body/div[1]/div/div[2]/div[1]/main/div[2]/div[3]/div/div/div[2]/div/div[2]/div/div[2]/div/div/div[8]/div/div[2]/div[2]/div[5]/button',
-    // )
-    // await fullscreenButton?.click()
     await collapse?.click()
     await page.waitForTimeout(4000)
 
-    console.log(`Taking screenshot... 📷  `)
     fs.ensureDirSync(dir) // create directory if it doesn't exist
     await page.screenshot({ path: './dist/scripts/screenshot/twitch.png' })
     process.kill(browserPID as number)
+    logHandler.log('info', `📷screenshot taken`)
     return true
   } catch (err) {
     throw err

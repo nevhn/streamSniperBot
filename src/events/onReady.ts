@@ -33,7 +33,7 @@ export const onReady = async (BOT: Client): Promise<void> => {
       ),
       { body: commandData },
     )
-    logHandler.log('info', 'Bot has connected to Discord!')
+    logHandler.log('info', '🤖bot has connected to discord!')
   } catch (err) {
     errorHandler('onReady event', err)
   }

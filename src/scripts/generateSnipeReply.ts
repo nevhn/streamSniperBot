@@ -1,31 +1,35 @@
 import { doesNotExistEmbed } from '../commands/snipeEmbedMessages/doesNotExist'
 import { inLobbyEmbed } from '../commands/snipeEmbedMessages/inLobby'
-import { notInLobbyEmbed } from '../commands/snipeEmbedMessages/notInLobby'
+import { notInLobbyEmbed } from '../commands/snipeEmbedMessages/inGame'
 import { offlineEmbed } from '../commands/snipeEmbedMessages/offline'
 import { streamSnipe } from './streamSnipe'
-export const generateSnipeReply = async (streamer: string) => {
-  const snipe = await streamSnipe(streamer)
-  console.log(snipe)
-  /**TODO:
-   * merge embeds (less is more)
-   * show watch status
-   */
-  if (snipe?.online === undefined) {
-    doesNotExistEmbed.title = streamer
+import fs from 'fs-extra'
+
+export const generateSnipeReply = async (player: string) => {
+  const { flag, streamer } = await fs.readJson('./dist/config/watch.json') // reads the recently modified watch.json
+  const { streamUrl, isOnline, inQueue } = await streamSnipe(player)
+  const isWatchFlag = streamer !== player ? false : flag
+
+  console.log(JSON.stringify({ streamUrl, isOnline, inQueue, isWatchFlag }, null, 4))
+  if (isOnline === undefined) {
+    doesNotExistEmbed.title = player
     return doesNotExistEmbed
   }
-  if (snipe?.online === false) {
-    offlineEmbed.title = streamer
+  if (isOnline === false) {
+    offlineEmbed.title = player
     return offlineEmbed
   }
 
-  if (snipe?.inQueue) {
-    inLobbyEmbed.title = streamer
-    inLobbyEmbed.url = snipe.streamUrl as string
+  if (inQueue) {
+    inLobbyEmbed.title = player
+    inLobbyEmbed.url = streamUrl as string
+    inLobbyEmbed.fields[0].value = isWatchFlag.toString()
     return inLobbyEmbed
   }
 
-  notInLobbyEmbed.title = streamer
-  notInLobbyEmbed.url = snipe?.streamUrl as string
+  notInLobbyEmbed.title = player
+  notInLobbyEmbed.url = streamUrl as string
+  notInLobbyEmbed.fields[0].value = isWatchFlag.toString()
+
   return notInLobbyEmbed
 }

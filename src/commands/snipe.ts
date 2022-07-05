@@ -3,6 +3,7 @@ import { errorHandler } from '../utils/errorHandler'
 import { logHandler } from '../utils/logHandler'
 import { generateSnipeReply } from '../scripts/generateSnipeReply'
 import { watchConfig } from '../scripts/generateWatch'
+import { apexPlayerChoices } from '../config/apexPlayers'
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { MessageAttachment } from 'discord.js'
 import fs from 'fs-extra'
@@ -10,58 +11,47 @@ import fs from 'fs-extra'
 export const snipe: CommandInt = {
   data: new SlashCommandBuilder()
     .setName('snipe')
-    .setDescription('Snipe your preferred streamer')
-    .addStringOption((option) =>
-      option
-        .setName('streamer')
-        .setDescription('Enter a streamer')
-        .setRequired(true)
-        // addChoices(...choices)
-        .addChoices({ name: 'tsm_imperialhal', value: 'tsm_imperialhal' })
-        .addChoices({ name: 'doesNotExist111', value: 'doesNotExist111' })
-        .addChoices({ name: 'xQc', value: 'xqc' })
-        .addChoices({ name: 'reps', value: 'tsm_reps' })
-        .addChoices({ name: 'dropped', value: 'dropped' })
-        .addChoices({ name: 'hollow_o', value: 'hollow_o' })
-        .addChoices({ name: 'crylixblooom', value: 'crylixblooom' })
-        .addChoices({ name: 'vinnie', value: 'vinnie' })
-        .addChoices({ name: 'akagosu', value: 'akagosu' })
-        .addChoices({ name: 'sweetdreams', value: 'sweetdreams' })
-        .addChoices({ name: 'acie', value: 'acie' })
-        .addChoices({ name: 'noko', value: 'noko' }),
+    .setDescription('grab a screenshot from stream')
+    .addStringOption(
+      (option) =>
+        option
+          .setName('streamer')
+          .setDescription('Enter a streamer')
+          .setRequired(true)
+          .addChoices(...apexPlayerChoices),
+      //TODO: make a database or store array somewhere
     )
     .addBooleanOption((option) =>
-      option.setName('watch').setDescription('enable constant updates on streamer'),
+      option
+        .setName('watch')
+        .setDescription(
+          'constantly grabs a screenshot from stream until user uses "/stop" or streamer goes offline',
+        ),
     ) as SlashCommandBuilder,
   run: async (interaction: any) => {
     try {
-      const file = new MessageAttachment('./dist/scripts/screenshot/twitch.png')
-      /**TODO:
-       * refactor this
-       */
       await interaction.deferReply()
-
       logHandler.log('info', '🔔snipe command was used')
+      const file = new MessageAttachment('./dist/scripts/screenshot/twitch.png')
       const watchOption = interaction.options.getBoolean('watch')
       const streamer = interaction.options.getString('streamer')
-      const message = await generateSnipeReply(streamer)
-      await interaction.followUp({ embeds: [message], files: message.online ? [file] : [] })
+      logHandler.log('info', `🎯 sniping ${streamer}...`)
 
-      if (!message?.online) return // exit if streamer <is offline | does not exist>
+      // if (watchOption) await watchConfig(streamer, true)
 
       if (watchOption) {
         await watchConfig(streamer, true)
         while (true) {
-          logHandler.log(`info`, `watching ${streamer}`)
+          //TODO:"refactor this"
           const isWatchFlag = await fs.readJson('./dist/config/watch.json') // reads the recently modified watch.json
+          const newMessage = await generateSnipeReply(streamer)
           if (!isWatchFlag.flag) {
-            logHandler.log('info', `${streamer} watch flag set to ${false}`)
+            logHandler.log('info', `🔴no longer watching ${streamer}`)
             break
           }
-          const newMessage = await generateSnipeReply(streamer)
           if (!newMessage?.online) {
             // if streamer suddenly goes offline
-            logHandler.log(`info`, `${streamer} went offline`)
+            logHandler.log(`info`, `${streamer} is currently offline`)
             await interaction.followUp({ embeds: [newMessage] })
             break
           }
@@ -69,8 +59,14 @@ export const snipe: CommandInt = {
             embeds: [newMessage],
             files: newMessage.online ? [file] : [],
           })
+          logHandler.log('info', `👁watching ${streamer}...`)
         }
+        return
       }
+
+      const message = await generateSnipeReply(streamer)
+      // if (!message?.online) return // exit if streamer <is offline | does not exist>
+      await interaction.followUp({ embeds: [message], files: message.online ? [file] : [] })
       return
     } catch (err) {
       errorHandler('snipe command', err)

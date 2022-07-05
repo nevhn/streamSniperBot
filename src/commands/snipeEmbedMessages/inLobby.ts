@@ -9,6 +9,12 @@ export const inLobbyEmbed = {
   title: '',
   url: '',
   description: 'In lobby!',
+  fields: [
+    {
+      name: 'watch flag',
+      value: 'false',
+    },
+  ],
   author: {
     url: emoji.bullseye,
   },

@@ -4,14 +4,14 @@ import 'dotenv/config'
 
 interface Twitch {
   streamUrl: string
-  online: boolean | undefined
-  mature: boolean
+  isOnline: boolean | undefined
+  isMature: boolean
 }
 export const fetchTwitchUrl = async (streamer: string): Promise<Twitch> => {
   let twitchResponse: Twitch = {
     streamUrl: '',
-    online: undefined,
-    mature: false,
+    isOnline: undefined,
+    isMature: false,
   }
 
   try {
@@ -24,18 +24,15 @@ export const fetchTwitchUrl = async (streamer: string): Promise<Twitch> => {
 
     if (isStreamer) {
       const getStreamInfo = (await twitchApi.getStreams({ channel: streamer })) as any
-      console.log(getStreamInfo)
-      // console.log(getStreamInfo.data[0] as Stream.is_mature)
       const isLive = getStreamInfo.data.length
       if (isLive) {
         const isMature = getStreamInfo.data[0]['is_mature']
         twitchResponse.streamUrl = `https://www.twitch.tv/${streamer}`
-        twitchResponse.online = true
-        twitchResponse.mature = isMature
-        console.log('twitch_response: ', twitchResponse)
+        twitchResponse.isOnline = true
+        twitchResponse.isMature = isMature
         return twitchResponse
       }
-      twitchResponse.online = false
+      twitchResponse.isOnline = false
       return twitchResponse
     }
 
