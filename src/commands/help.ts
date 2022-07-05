@@ -11,22 +11,16 @@ export const help: CommandInt = {
     try {
       await interaction.deferReply()
       const helpEmbed = new MessageEmbed()
-      helpEmbed.setTitle('100 Days of Code Bot!')
+      helpEmbed.setTitle('FckingStreamSnipers')
       helpEmbed.setDescription(
-        'This discord bot is designed to help you track and share your 100 Days of Code progress.',
+        'This discord bot can check if a streamer is queueing up for a game [currently works for Apex Legends only]',
       )
       helpEmbed.addField(
-        "Create today's update",
-        'Use the `/100` command to create your update for today. The `message` will be displayed in your embed.',
+        'watch a streamer with the watch flag',
+        'Use the `/snipe` command with the `watch` option set to `true`, this will allow the bot to take screenshot continuously(can be used multiple times but has not been tested thoroughly).',
       )
-      helpEmbed.addField(
-        "Edit today's update",
-        'Do you see a typo in your embed? Right click it and copy the ID (you may need developer mode on for this), and use the `/edit` command to update that embed with a new message.',
-      )
-      helpEmbed.addField(
-        'Show your progress',
-        'To see your current progress in the challenge, and the day you last checked in, use `/view`.',
-      )
+      helpEmbed.addField('stop watching', 'Use the `/stop` command to disable the `watch` flag')
+      helpEmbed.addField('ping', 'Get bot latency ')
       helpEmbed.setFooter(`Version ${process.env.npm_package_version}`)
       await interaction.editReply({ embeds: [helpEmbed] })
       return

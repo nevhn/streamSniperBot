@@ -7,7 +7,7 @@ export const logHandler = createLogger({
   transports: [new transports.Console()],
   format: combine(
     timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'MM-DD-YYYY hh:mm:ss',
     }),
     colorize(),
     printf((info) => `${info.level}: ${[info.timestamp]}: ${info.message}`),
