@@ -2,6 +2,8 @@
 
 A Discord bot that notifies you when a streamer is in a game lobby by using node-tesseract-ocr to extract text from a screenshot of the streamer's page on twitch.tv. This project was made for entertainment purposes and is not a serious, well-maintained project (just a goof). It has been tested for Apex Legends streamers and may have inconsistent results due to the nature of navigating twitch.tv with Puppeteer.
 
+## Screenshots
+![image](https://user-images.githubusercontent.com/51008990/218619839-88f1f03b-6108-485d-8d90-28fdfa0ef043.png)
 
 ### Features/Commands
 - `!snipe 'insert streamer here'` 
